@@ -5,14 +5,18 @@ Created on Tue Apr 17 13:32:04 2018
 @author: Luis Antonio V R
 """
 import tkinter as tk
+import serial
+from serial.serialutil import SerialException
 #from tkinter import Canvas, StringVar()
 
 class WindowPrinter:
     
     def __init__(self):
+        self.s = None
         self.master = tk.Tk()#master
         self.com_num = tk.StringVar()
         self.com_num.set('1')
+        
         
         # Configuration root window
         self.master.iconbitmap('metro.ico')
@@ -54,11 +58,30 @@ class WindowPrinter:
         tk.Button(self.master, 
                   text='Conectar', 
                   borderwidth = 1, 
-                  font=('Consolas', 12)).grid(row=0, 
+                  font=('Consolas', 12),
+                  command=self.conectarCOM).grid(row=0, 
                                               column=3,
                                               padx=8,
                                               pady=20)
-        tk.mainloop()
+        self.master.mainloop()
+    
+    def IniciaPuertoSerie(self, COMnumero):
+        '''
+            Conecta con el puerto serie de comunicaciones, sí lo hay.
+        '''
+
+        # Configuración general para la comunicación serial
+        self.s = serial.Serial(port = COMnumero, 
+                               baudrate = 38400, 
+                               bytesize = 8, 
+                               parity = serial.PARITY_NONE,
+                               stopbits = 1)
+
+        # Limpia cualquier dato que haya quedado en el buffer
+        self.s.flushInput()
+        self.s.setDTR()
+
+        return self.s
     
     def led(self, row=0, column=0, color='lavender'):    
         '''
@@ -84,5 +107,46 @@ class WindowPrinter:
         else:
             color = 'red' 
 
-        self.led(row=1, column=0, color=color)
+        self.led(row=0, column=0, color=color)
+    
+    def conectarCOM(self):
+        '''
+            Conecta y evalua el estado del puerto de comunicaciones COM
+        '''
+        # Obtiene el nuevo valor
+        com = 'COM' + self.com_num.get()
+        
+        try:
+            try:
+                if self.s.isOpen() == True:
+                    
+                    if self.s.name == com:
+                        self.led_color(1)
+                        #self.bot.set('Esperando RPE')
+                       
+                    else:
+                        self.led_color(2)
+                        #self.bot.set('Acceso negado')
+                        self.s.close()
+                        
+                elif self.s.isOpen() == False:
+                    
+                    self.s = self.IniciaPuertoSerie(com)
+      
+                    if self.s.name == com:
+                        self.led_color(1)
+                        #self.bot.set('Esperando RPE')
+                        
+            except AttributeError:
+                
+                    self.s = self.IniciaPuertoSerie(com)
+      
+                    if self.s.name == com:
+                        self.led_color(1)
+                        #self.bot.set('Esperando RPE')
+                    
+        except SerialException:
+            
+                self.led_color(2)
+                #self.bot.set('Acceso negado')
         
