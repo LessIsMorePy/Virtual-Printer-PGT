@@ -5,6 +5,7 @@ Created on Tue Apr 17 13:32:04 2018
 @author: Luis Antonio V R
 """
 import tkinter as tk
+from tkinter import messagebox
 import serial
 from serial.serialutil import SerialException
 
@@ -80,6 +81,8 @@ class WindowPrinter:
                                               column=3,
                                               padx=8,
                                               pady=20)
+        
+        self.master.protocol("WM_DELETE_WINDOW", self.when_close)
         self.master.mainloop()
     
     def start_com(self, COMnumero):
@@ -167,4 +170,12 @@ class WindowPrinter:
             
                 self.led_color(2)
                 self.text_bot.set('Acceso negado a {}'.format(com))
+    def when_close(self):
+        "Before closing"
         
+        if messagebox.askokcancel('Cerrar Virtual Printer PGT', '¿Quieres cerrar la aplicación?'):
+        #print(stop_stream.do_run)
+        #stop_stream.closeConnection()
+        #stop_stream.shutdown = True
+            self.master.destroy()
+            #return break

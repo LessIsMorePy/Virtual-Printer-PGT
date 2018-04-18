@@ -26,9 +26,11 @@ def serial_config():
     
     return s
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
     
     #s = serial_config() 
+#while True:
+if __name__ == '__main__':    
     WindowPrinter()
     
 
