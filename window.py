@@ -7,16 +7,17 @@ Created on Tue Apr 17 13:32:04 2018
 import tkinter as tk
 import serial
 from serial.serialutil import SerialException
-#from tkinter import Canvas, StringVar()
 
 class WindowPrinter:
     
     def __init__(self):
+        
         self.s = None
         self.master = tk.Tk()#master
         self.com_num = tk.StringVar()
         self.com_num.set('1')
-        
+        self.text_bot = tk.StringVar()
+        self.text_bot.set("Esperando conexión")
         
         # Configuration root window
         self.master.iconbitmap('metro.ico')
@@ -28,26 +29,42 @@ class WindowPrinter:
         
         # Label "Puerto COM"        
         labl = tk.Label(self.master, 
-                        text='Puerto COM ',
+                        text='Puerto COM',
                         font = ('Consolas', 14),
                         fg = 'dodgerBlue4',
-                        bg = 'white')
+                        bg = 'white',
+                        justify='center')
         labl.grid(row=0, 
                   column=1, 
                   columnspan=1,
                   sticky='WE',
                   padx=8)
         
+        # Label bot
+        entry_bot = tk.Entry(self.master, 
+                             text=self.text_bot, 
+                             width=1, 
+                             #bg='Azure',
+                             bg='White', 
+                             bd=0.5, 
+                             font=('Consolas', 14),
+                             justify='center')
+        entry_bot.grid(row=1, 
+                       column=0, 
+                       columnspan=4, 
+                       sticky='WESN',
+                       padx=5,
+                       pady=5)
+        
         # Entry
-        #com_text = tk.StringVar()
-        #com_text.set('1')
         entry_com = tk.Entry(self.master, 
                              text=self.com_num, 
                              width=3, 
                              #bg='SlateGray1',
                              bg='White', 
                              bd=0.5, 
-                             font=('Consolas', 14))
+                             font=('Consolas', 14),
+                             justify='center')
         entry_com.grid(row=0, 
                        column=2, 
                        columnspan=1, 
@@ -59,25 +76,25 @@ class WindowPrinter:
                   text='Conectar', 
                   borderwidth = 1, 
                   font=('Consolas', 12),
-                  command=self.conectarCOM).grid(row=0, 
+                  command=self.logic_com).grid(row=0, 
                                               column=3,
                                               padx=8,
                                               pady=20)
         self.master.mainloop()
     
-    def IniciaPuertoSerie(self, COMnumero):
+    def start_com(self, COMnumero):
         '''
-            Conecta con el puerto serie de comunicaciones, sí lo hay.
+            Start the serial port.
         '''
 
-        # Configuración general para la comunicación serial
+        # General configuration
         self.s = serial.Serial(port = COMnumero, 
                                baudrate = 38400, 
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
                                stopbits = 1)
 
-        # Limpia cualquier dato que haya quedado en el buffer
+        # Clean any data at buffer
         self.s.flushInput()
         self.s.setDTR()
 
@@ -96,7 +113,7 @@ class WindowPrinter:
         
     def led_color(self, state=0):
         '''
-            Set a color to the led
+            Set a color led
         '''
         if state == 0:
             color = 'lavender' 
@@ -109,44 +126,45 @@ class WindowPrinter:
 
         self.led(row=0, column=0, color=color)
     
-    def conectarCOM(self):
+    def logic_com(self):
         '''
-            Conecta y evalua el estado del puerto de comunicaciones COM
+            Logic to prepare and connect in the correct way the COM port
         '''
-        # Obtiene el nuevo valor
+        # Get COM value
         com = 'COM' + self.com_num.get()
         
+        # Logic
         try:
             try:
                 if self.s.isOpen() == True:
                     
                     if self.s.name == com:
                         self.led_color(1)
-                        #self.bot.set('Esperando RPE')
+                        self.text_bot.set('Acceso a {}'.format(com))
                        
                     else:
                         self.led_color(2)
-                        #self.bot.set('Acceso negado')
+                        self.text_bot.set('Acceso negado a {}'.format(com))
                         self.s.close()
                         
                 elif self.s.isOpen() == False:
                     
-                    self.s = self.IniciaPuertoSerie(com)
+                    self.s = self.start_com(com)
       
                     if self.s.name == com:
                         self.led_color(1)
-                        #self.bot.set('Esperando RPE')
+                        self.text_bot.set('Acceso a {}'.format(com))
                         
             except AttributeError:
                 
-                    self.s = self.IniciaPuertoSerie(com)
+                    self.s = self.start_com(com)
       
                     if self.s.name == com:
                         self.led_color(1)
-                        #self.bot.set('Esperando RPE')
+                        self.text_bot.set('Acceso a {}'.format(com))
                     
         except SerialException:
             
                 self.led_color(2)
-                #self.bot.set('Acceso negado')
+                self.text_bot.set('Acceso negado a {}'.format(com))
         
