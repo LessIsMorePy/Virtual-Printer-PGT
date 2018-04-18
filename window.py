@@ -177,5 +177,9 @@ class WindowPrinter:
         #print(stop_stream.do_run)
         #stop_stream.closeConnection()
         #stop_stream.shutdown = True
+            try:
+                self.s.close()
+            except AttributeError:
+                pass
             self.master.destroy()
             #return break
