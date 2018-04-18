@@ -175,7 +175,12 @@ class WindowPrinter:
                 
     def read_com_port(self):
         
-        print('task')
+        try:
+            data = self.s.readline()
+            print('data')
+            
+        except AttributeError:
+            pass
         
         self.master.after(1000, self.read_com_port)
                 
