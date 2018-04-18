@@ -8,13 +8,14 @@ import tkinter as tk
 from tkinter import messagebox
 import serial
 from serial.serialutil import SerialException
+import time
 
 class WindowPrinter:
     
-    def __init__(self):
+    def __init__(self, master):
         
         self.s = None
-        self.master = tk.Tk()#master
+        self.master = master
         self.com_num = tk.StringVar()
         self.com_num.set('1')
         self.text_bot = tk.StringVar()
@@ -81,9 +82,10 @@ class WindowPrinter:
                                               column=3,
                                               padx=8,
                                               pady=20)
+                  
+        self.read_com_port()
         
         self.master.protocol("WM_DELETE_WINDOW", self.when_close)
-        self.master.mainloop()
     
     def start_com(self, COMnumero):
         '''
@@ -170,16 +172,30 @@ class WindowPrinter:
             
                 self.led_color(2)
                 self.text_bot.set('Acceso negado a {}'.format(com))
+                
+    def read_com_port(self):
+        
+        print('task')
+        
+        self.master.after(1000, self.read_com_port)
+                
     def when_close(self):
         "Before closing"
         
         if messagebox.askokcancel('Cerrar Virtual Printer PGT', '¿Quieres cerrar la aplicación?'):
-        #print(stop_stream.do_run)
-        #stop_stream.closeConnection()
-        #stop_stream.shutdown = True
             try:
                 self.s.close()
+                
             except AttributeError:
                 pass
+            
             self.master.destroy()
-            #return break
+            
+
+if __name__ == '__main__':
+#while True:
+    root = tk.Tk()
+    WindowPrinter(root)
+    root.mainloop()
+
+ 
