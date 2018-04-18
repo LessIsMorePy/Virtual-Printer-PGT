@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 import serial
 from serial.serialutil import SerialException
-import time
+from storage import save_data
 
 class WindowPrinter:
     
@@ -177,12 +177,13 @@ class WindowPrinter:
         
         try:
             data = self.s.readline()
-            print('data')
+            save_data(data)
+            #print(data)
             
         except AttributeError:
             pass
         
-        self.master.after(1000, self.read_com_port)
+        self.master.after(1, self.read_com_port)
                 
     def when_close(self):
         "Before closing"

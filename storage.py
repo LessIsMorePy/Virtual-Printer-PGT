@@ -4,6 +4,7 @@ Created on Tue Apr 17 16:48:57 2018
 
 @author: Luis Antonio V R
 """
+import time
 
 def save_data(data):
     '''
@@ -14,7 +15,7 @@ def save_data(data):
     '''    
    
     # Build text file 
-    file = open('Log-'+strftime("%d-%m-%y")+'.xls', 'a')
+    file = open('Log-'+time.strftime("%d-%m-%y")+'.xls', 'a')
     
     # Save read data
     data = data\
@@ -45,7 +46,7 @@ def save_data(data):
         
     except UnicodeDecodeError:
         file.write(str(data) + '\n')
-        data2 = data
+        data_2 = data
         print(data_2)
         file.close()
         return str(data_2)
