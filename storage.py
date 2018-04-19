@@ -6,7 +6,7 @@ Created on Tue Apr 17 16:48:57 2018
 """
 import time
 
-def save_data(data, ext):
+def save_data(data):
     '''
         Save and print the captured data.
         
@@ -15,7 +15,7 @@ def save_data(data, ext):
     '''    
    
     # Build text file 
-    file = open('Log-'+time.strftime("%d-%m-%y")+ext, 'a')
+    file = open('Log-'+time.strftime("%d-%m-%y")+'.xls', 'a')
     
     # Save read data
     data = data\
@@ -38,14 +38,14 @@ def save_data(data, ext):
            .replace(b'\xa0', b'a') 
    
     try:
-        file.write(str(data.decode().strip()) + '\n')
+        file.write(str(data.decode().strip()))
         data_1 = data.decode().strip()
         #print(data_1)
         file.close()
         return str(data_1)
         
     except UnicodeDecodeError:
-        file.write(str(data) + '\n')
+        file.write(str(data))
         data_2 = data
         #print(data_2)
         file.close()

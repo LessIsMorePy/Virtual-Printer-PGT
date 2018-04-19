@@ -147,7 +147,7 @@ class WindowPrinter:
         # Text
         self.text_pgt = tk.Text(self.master)
         self.text_pgt.config(font=('Times New Roman', 12),
-                        height=15, width=90,
+                        height=15, width=150,
                         bg='white',
                         fg='royalblue4',
                         borderwidth=0.4,
@@ -174,7 +174,7 @@ class WindowPrinter:
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
                                stopbits = 1,
-                               timeout=0.2)
+                               timeout=0.01)
 
         # Clean any data at buffer
         self.s.flushInput()
@@ -254,10 +254,10 @@ class WindowPrinter:
         
         try:
             data = self.s.readline()
-            data_str = save_data(data=data, ext=self.text_ext)
-            self.text_pgt.insert('1.0', data_str)
-            print(data_str)
-            
+            if data != b'':
+                data_str = save_data(data)
+                self.text_pgt.insert('1.0', data_str)
+       
         except AttributeError:
             pass
         
