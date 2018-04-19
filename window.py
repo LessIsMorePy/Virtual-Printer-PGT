@@ -88,6 +88,7 @@ class WindowPrinter:
                   sticky='WE',
                   padx=2)
         
+        """
         # Entry file extension
         entry_com = tk.Entry(self.master, 
                              text=self.text_ext, 
@@ -101,7 +102,18 @@ class WindowPrinter:
                        columnspan=1, 
                        sticky='WE',
                        padx=2)
+        """
+        list_ext = {".xls": 0, ".txt": 1}
+        #var_ext = tk.StringVar()
+        #var_ext.set('.xls')
+        #self.text_ext
         
+        menu = tk.OptionMenu(self.master, 
+                             self.text_ext, 
+                             *list_ext.keys())
+        menu.config(takefocus=2)
+        menu.grid(row=0, column=9, padx=2, sticky='WE')
+         
         # Buttons
         tk.Button(self.master, 
                   text='Conectar', 
@@ -226,7 +238,7 @@ class WindowPrinter:
         
         try:
             data = self.s.readline()
-            data_str = save_data(data)
+            data_str = save_data(data=data, ext=self.text_ext)
             self.text_pgt.insert('1.0', data_str)
             print(data_str)
             

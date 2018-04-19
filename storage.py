@@ -6,7 +6,7 @@ Created on Tue Apr 17 16:48:57 2018
 """
 import time
 
-def save_data(data):
+def save_data(data, ext):
     '''
         Save and print the captured data.
         
@@ -15,7 +15,7 @@ def save_data(data):
     '''    
    
     # Build text file 
-    file = open('Log-'+time.strftime("%d-%m-%y")+'.xls', 'a')
+    file = open('Log-'+time.strftime("%d-%m-%y")+ext, 'a')
     
     # Save read data
     data = data\
