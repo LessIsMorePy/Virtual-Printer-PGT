@@ -22,6 +22,8 @@ class WindowPrinter:
         self.text_bot.set("Esperando conexión")
         self.text_ext = tk.StringVar()
         self.text_ext.set(".xls")
+        self.text_namef = tk.StringVar()
+        self.text_namef.set("L3Ene03")
         
         # Configuration root window
         self.master.iconbitmap('metro.ico')
@@ -44,6 +46,35 @@ class WindowPrinter:
                   sticky='WE',
                   padx=2)
         
+        # Label file name       
+        labl_name = tk.Label(self.master, 
+                        text='Nombre de archivo',
+                        font = ('Consolas', 12),
+                        fg = 'dodgerBlue4',
+                        bg = 'white',
+                        justify='center')
+        labl_name.grid(row=0, 
+                  column=6, 
+                  columnspan=1,
+                  sticky='WE',
+                  padx=2)
+        
+         # Entry file name
+        entry_file = tk.Entry(self.master, 
+                             text=self.text_namef, 
+                             width=1, 
+                             #bg='Azure',
+                             bg='White', 
+                             bd=0.5, 
+                             font=('Consolas', 14),
+                             justify='center')
+        entry_file.grid(row=0, 
+                       column=7, 
+                       columnspan=4, 
+                       sticky='WE',
+                       padx=5,
+                       pady=5)
+        
         # Label bot
         entry_bot = tk.Entry(self.master, 
                              text=self.text_bot, 
@@ -55,7 +86,7 @@ class WindowPrinter:
                              justify='center')
         entry_bot.grid(row=1, 
                        column=0, 
-                       columnspan=11, 
+                       columnspan=21, 
                        sticky='WE',
                        padx=5,
                        pady=5)
@@ -83,26 +114,11 @@ class WindowPrinter:
                         bg = 'white',
                         justify='center')
         labl_ext.grid(row=0, 
-                  column=8, 
+                  column=10, 
                   columnspan=1,
                   sticky='WE',
                   padx=2)
         
-        """
-        # Entry file extension
-        entry_com = tk.Entry(self.master, 
-                             text=self.text_ext, 
-                             width=3, 
-                             bg='White', 
-                             bd=0.5, 
-                             font=('Consolas', 14),
-                             justify='center')
-        entry_com.grid(row=0, 
-                       column=9, 
-                       columnspan=1, 
-                       sticky='WE',
-                       padx=2)
-        """
         list_ext = {".xls": 0, ".txt": 1}
         #var_ext = tk.StringVar()
         #var_ext.set('.xls')
@@ -112,7 +128,7 @@ class WindowPrinter:
                              self.text_ext, 
                              *list_ext.keys())
         menu.config(takefocus=2)
-        menu.grid(row=0, column=9, padx=2, sticky='WE')
+        menu.grid(row=0, column=11, padx=2, sticky='WE')
          
         # Buttons
         tk.Button(self.master, 
@@ -126,7 +142,7 @@ class WindowPrinter:
         
         # Scrollbar
         scroll = tk.Scrollbar(self.master)
-        scroll.grid(row=3, column=11, sticky='NS')
+        scroll.grid(row=3, column=21, sticky='NS')
         
         # Text
         self.text_pgt = tk.Text(self.master)
@@ -140,7 +156,7 @@ class WindowPrinter:
                       column = 0, 
                       padx = 5, pady = 10,
                       ipadx = 0, ipady = 0,
-                      columnspan = 10, sticky='WE') 
+                      columnspan = 20, sticky='WE') 
         scroll.config(command=self.text_pgt.yview) 
         
         self.read_com_port()
