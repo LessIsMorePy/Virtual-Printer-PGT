@@ -98,6 +98,7 @@ class WindowPrinter:
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
                                stopbits = 1)
+                               #timeout=0.1)
 
         # Clean any data at buffer
         self.s.flushInput()
@@ -176,9 +177,15 @@ class WindowPrinter:
     def read_com_port(self):
         
         try:
-            data = self.s.readline()
-            save_data(data)
-            #print(data)
+            if self.s.inWaiting != 0: 
+                data = self.s.readline()
+            #if data != b'':
+                save_data(data)
+            else:
+                pass
+            #print(self.s)
+            #print(type(self.s.inWaiting()))
+            #print(self.s.)
             
         except AttributeError:
             pass
