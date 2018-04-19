@@ -20,7 +20,7 @@ class WindowPrinter:
         self.com_num.set('1')
         self.text_bot = tk.StringVar()
         self.text_bot.set("Esperando conexión")
-        
+        self.text_box = tk.StringVar()
         # Configuration root window
         self.master.iconbitmap('metro.ico')
         self.master.config(bg='white')
@@ -82,7 +82,26 @@ class WindowPrinter:
                                               column=3,
                                               padx=8,
                                               pady=20)
+             
+        # Text
+        yscrollbar_text = tk.Scrollbar(margen, orient = "vertical", command=text.yview)
+        yscrollbar_text.grid(row = 2, column = 5, sticky='NS')
+             
+        text_pgt = tk.Text(self.master,
+                           text=self.text_box,
+                           font=('Times New Roman', 12),
+                           height=15, width=70,
+                           yscrollcommand=yscrollbar_text.set,
+                           bg='white',
+                           fg='royalblue4',
+                           borderwidth=0.4)
+        text_pgt.grid(row = 2, 
+                      column = 0, 
+                      padx = 0, pady = 0,
+                      ipadx = 0, ipady = 0,
+                      columnspan = 4, sticky='EW')
                   
+        
         self.read_com_port()
         
         self.master.protocol("WM_DELETE_WINDOW", self.when_close)
@@ -177,12 +196,12 @@ class WindowPrinter:
         
         try:
             data = self.s.readline()
-            save_data(data)
-            #print(data)
-            
+            data_str = save_data(data)
+
         except AttributeError:
             pass
         
+        print(data_str)
         self.master.after(1, self.read_com_port)
                 
     def when_close(self):

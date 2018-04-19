@@ -40,14 +40,14 @@ def save_data(data):
     try:
         file.write(str(data.decode().strip()) + '\n')
         data_1 = data.decode().strip()
-        print(data_1)
+        #print(data_1)
         file.close()
         return str(data_1)
         
     except UnicodeDecodeError:
         file.write(str(data) + '\n')
         data_2 = data
-        print(data_2)
+        #print(data_2)
         file.close()
         return str(data_2)
 
