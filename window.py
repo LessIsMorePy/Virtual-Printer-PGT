@@ -20,7 +20,9 @@ class WindowPrinter:
         self.com_num.set('1')
         self.text_bot = tk.StringVar()
         self.text_bot.set("Esperando conexión")
-        self.text_box = tk.StringVar()
+        self.text_ext = tk.StringVar()
+        self.text_ext.set(".xls")
+        
         # Configuration root window
         self.master.iconbitmap('metro.ico')
         self.master.config(bg='white')
@@ -40,7 +42,7 @@ class WindowPrinter:
                   column=1, 
                   columnspan=1,
                   sticky='WE',
-                  padx=8)
+                  padx=2)
         
         # Label bot
         entry_bot = tk.Entry(self.master, 
@@ -53,12 +55,12 @@ class WindowPrinter:
                              justify='center')
         entry_bot.grid(row=1, 
                        column=0, 
-                       columnspan=4, 
-                       sticky='WESN',
+                       columnspan=11, 
+                       sticky='WE',
                        padx=5,
                        pady=5)
         
-        # Entry
+        # Entry COM number
         entry_com = tk.Entry(self.master, 
                              text=self.com_num, 
                              width=3, 
@@ -71,7 +73,34 @@ class WindowPrinter:
                        column=2, 
                        columnspan=1, 
                        sticky='WE',
-                       padx=5)
+                       padx=2)
+        
+        # Label file extention 
+        labl_ext = tk.Label(self.master, 
+                        text='Formato:',
+                        font = ('Consolas', 14),
+                        fg = 'dodgerBlue4',
+                        bg = 'white',
+                        justify='center')
+        labl_ext.grid(row=0, 
+                  column=8, 
+                  columnspan=1,
+                  sticky='WE',
+                  padx=2)
+        
+        # Entry file extension
+        entry_com = tk.Entry(self.master, 
+                             text=self.text_ext, 
+                             width=3, 
+                             bg='White', 
+                             bd=0.5, 
+                             font=('Consolas', 14),
+                             justify='center')
+        entry_com.grid(row=0, 
+                       column=9, 
+                       columnspan=1, 
+                       sticky='WE',
+                       padx=2)
         
         # Buttons
         tk.Button(self.master, 
@@ -82,25 +111,25 @@ class WindowPrinter:
                                               column=3,
                                               padx=8,
                                               pady=20)
-             
+        
+        # Scrollbar
+        scroll = tk.Scrollbar(self.master)
+        scroll.grid(row=3, column=11, sticky='NS')
+        
         # Text
-        yscrollbar_text = tk.Scrollbar(margen, orient = "vertical", command=text.yview)
-        yscrollbar_text.grid(row = 2, column = 5, sticky='NS')
-             
-        text_pgt = tk.Text(self.master,
-                           text=self.text_box,
-                           font=('Times New Roman', 12),
-                           height=15, width=70,
-                           yscrollcommand=yscrollbar_text.set,
-                           bg='white',
-                           fg='royalblue4',
-                           borderwidth=0.4)
-        text_pgt.grid(row = 2, 
+        self.text_pgt = tk.Text(self.master)
+        self.text_pgt.config(font=('Times New Roman', 12),
+                        height=15, width=90,
+                        bg='white',
+                        fg='royalblue4',
+                        borderwidth=0.4,
+                        yscrollcommand=scroll.set)
+        self.text_pgt.grid(row = 3, 
                       column = 0, 
-                      padx = 0, pady = 0,
+                      padx = 5, pady = 10,
                       ipadx = 0, ipady = 0,
-                      columnspan = 4, sticky='EW')
-                  
+                      columnspan = 10, sticky='WE') 
+        scroll.config(command=self.text_pgt.yview) 
         
         self.read_com_port()
         
@@ -116,7 +145,8 @@ class WindowPrinter:
                                baudrate = 38400, 
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
-                               stopbits = 1)
+                               stopbits = 1,
+                               timeout=0.2)
 
         # Clean any data at buffer
         self.s.flushInput()
@@ -130,7 +160,7 @@ class WindowPrinter:
         '''
         # Root
         c_circle = tk.Canvas(self.master, width=30, height=30, bg='white')
-        c_circle.grid(row=row, column=column, padx=5, pady=5, sticky='W')
+        c_circle.grid(row=row, column=column, padx=1, pady=1, columnspan=1)
         
         # Circle 
         c_circle.create_oval(5, 5, 30, 30, width=0, fill=color)
@@ -197,11 +227,12 @@ class WindowPrinter:
         try:
             data = self.s.readline()
             data_str = save_data(data)
-
+            self.text_pgt.insert('1.0', data_str)
+            print(data_str)
+            
         except AttributeError:
             pass
         
-        print(data_str)
         self.master.after(1, self.read_com_port)
                 
     def when_close(self):
