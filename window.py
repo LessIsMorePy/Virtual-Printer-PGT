@@ -28,7 +28,7 @@ class WindowPrinter:
         # Configuration root window
         self.master.iconbitmap('metro.ico')
         self.master.config(bg='white')
-        self.master.title('Impresora Virtual PGT')
+        self.master.title('Impresora Virtual PGT Beta')
         
         # Draw led
         self.led(0, 0)
@@ -46,34 +46,6 @@ class WindowPrinter:
                   sticky='WE',
                   padx=2)
         
-        # Label file name       
-        labl_name = tk.Label(self.master, 
-                        text='Nombre de archivo',
-                        font = ('Consolas', 12),
-                        fg = 'dodgerBlue4',
-                        bg = 'white',
-                        justify='center')
-        labl_name.grid(row=0, 
-                  column=6, 
-                  columnspan=1,
-                  sticky='WE',
-                  padx=2)
-        
-         # Entry file name
-        entry_file = tk.Entry(self.master, 
-                             text=self.text_namef, 
-                             width=1, 
-                             #bg='Azure',
-                             bg='White', 
-                             bd=0.5, 
-                             font=('Consolas', 14),
-                             justify='center')
-        entry_file.grid(row=0, 
-                       column=7, 
-                       columnspan=4, 
-                       sticky='WE',
-                       padx=5,
-                       pady=5)
         
         # Label bot
         entry_bot = tk.Entry(self.master, 
@@ -105,30 +77,6 @@ class WindowPrinter:
                        columnspan=1, 
                        sticky='WE',
                        padx=2)
-        
-        # Label file extention 
-        labl_ext = tk.Label(self.master, 
-                        text='Formato:',
-                        font = ('Consolas', 14),
-                        fg = 'dodgerBlue4',
-                        bg = 'white',
-                        justify='center')
-        labl_ext.grid(row=0, 
-                  column=10, 
-                  columnspan=1,
-                  sticky='WE',
-                  padx=2)
-        
-        list_ext = {".xls": 0, ".txt": 1}
-        #var_ext = tk.StringVar()
-        #var_ext.set('.xls')
-        #self.text_ext
-        
-        menu = tk.OptionMenu(self.master, 
-                             self.text_ext, 
-                             *list_ext.keys())
-        menu.config(takefocus=2)
-        menu.grid(row=0, column=11, padx=2, sticky='WE')
          
         # Buttons
         tk.Button(self.master, 
@@ -147,7 +95,7 @@ class WindowPrinter:
         # Text
         self.text_pgt = tk.Text(self.master)
         self.text_pgt.config(font=('Times New Roman', 12),
-                        height=15, width=150,
+                        height=20, width=100,
                         bg='white',
                         fg='royalblue4',
                         borderwidth=0.4,
@@ -159,6 +107,7 @@ class WindowPrinter:
                       columnspan = 20, sticky='WE') 
         scroll.config(command=self.text_pgt.yview) 
         
+       
         self.read_com_port()
         
         self.master.protocol("WM_DELETE_WINDOW", self.when_close)
@@ -173,8 +122,8 @@ class WindowPrinter:
                                baudrate = 38400, 
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
-                               stopbits = 1,
-                               timeout=0.01)
+                               stopbits = 1)
+                               #timeout=0.01)
 
         # Clean any data at buffer
         self.s.flushInput()
@@ -251,13 +200,13 @@ class WindowPrinter:
                 self.text_bot.set('Acceso negado a {}'.format(com))
                 
     def read_com_port(self):
-        
+
         try:
-            data = self.s.readline()
-            if data != b'':
+            if self.s.inWaiting() != 0:
+                data = self.s.readline()
                 data_str = save_data(data)
-                self.text_pgt.insert('1.0', data_str)
-       
+                self.text_pgt.insert('1.0', data_str + '\n')
+            
         except AttributeError:
             pass
         
@@ -277,7 +226,6 @@ class WindowPrinter:
             
 
 if __name__ == '__main__':
-#while True:
     root = tk.Tk()
     WindowPrinter(root)
     root.mainloop()

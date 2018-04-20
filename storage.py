@@ -38,14 +38,14 @@ def save_data(data):
            .replace(b'\xa0', b'a') 
    
     try:
-        file.write(str(data.decode().strip()))
+        file.write(str(data.decode().strip()) + '\n')
         data_1 = data.decode().strip()
         #print(data_1)
         file.close()
         return str(data_1)
         
     except UnicodeDecodeError:
-        file.write(str(data))
+        file.write(str(data) + '\n')
         data_2 = data
         #print(data_2)
         file.close()
