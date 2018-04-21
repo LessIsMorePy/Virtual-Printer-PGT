@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 """
+Description:
+This is a simple user interface that allows you connecting to a serial port for 
+getting data and at the same time the application it can store the data in 
+a excel file.
+
+It should be mentioned that this application was designed for a specific task. 
+In this case, the main task is to receive a special format data from an antique
+printer that does not work well currently.
+
+The application has a logic to handle some issues of connexion serial port.
+
 Created on Tue Apr 17 13:32:04 2018
 
 @author: Luis Antonio V R
@@ -51,7 +62,6 @@ class WindowPrinter:
         entry_bot = tk.Entry(self.master, 
                              text=self.text_bot, 
                              width=1, 
-                             #bg='Azure',
                              bg='White', 
                              bd=0.5, 
                              font=('Consolas', 14),
@@ -67,7 +77,6 @@ class WindowPrinter:
         entry_com = tk.Entry(self.master, 
                              text=self.com_num, 
                              width=3, 
-                             #bg='SlateGray1',
                              bg='White', 
                              bd=0.5, 
                              font=('Consolas', 14),
@@ -123,7 +132,6 @@ class WindowPrinter:
                                bytesize = 8, 
                                parity = serial.PARITY_NONE,
                                stopbits = 1)
-                               #timeout=0.01)
 
         # Clean any data at buffer
         self.s.flushInput()
@@ -200,7 +208,11 @@ class WindowPrinter:
                 self.text_bot.set('Acceso negado a {}'.format(com))
                 
     def read_com_port(self):
-
+        """
+            Reading serial port, getting data, storing data and writing data
+            in the text tkinter widget every mili second. 
+        """        
+        
         try:
             if self.s.inWaiting() != 0:
                 data = self.s.readline()
@@ -226,6 +238,7 @@ class WindowPrinter:
             
 
 if __name__ == '__main__':
+    
     root = tk.Tk()
     WindowPrinter(root)
     root.mainloop()

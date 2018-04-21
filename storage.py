@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 """
+Description:
+This script allows you storing data in a xls file and also replace 
+special characters
+
 Created on Tue Apr 17 16:48:57 2018
 
 @author: Luis Antonio V R
@@ -8,7 +12,7 @@ import time
 
 def save_data(data):
     '''
-        Save and print the captured data.
+        Save as "xls" file the captured data and replace a special characteres.
         
         parameters:
         data: Data from port serial  
@@ -40,15 +44,13 @@ def save_data(data):
     try:
         file.write(str(data.decode().strip()) + '\n')
         data_1 = data.decode().strip()
-        #print(data_1)
         file.close()
+        
         return str(data_1)
         
     except UnicodeDecodeError:
         file.write(str(data) + '\n')
         data_2 = data
-        #print(data_2)
         file.close()
+        
         return str(data_2)
-
-
